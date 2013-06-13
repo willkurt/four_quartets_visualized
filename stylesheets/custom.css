@@ -1,0 +1,13 @@
+p.visualization {
+    float: left;
+}
+
+.visualization img{
+    width: 400px;
+    padding: 0em;
+    margin: 0em;
+}
+
+p.poem_text {
+    float: right;
+}
