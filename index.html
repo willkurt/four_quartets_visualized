@@ -51,11 +51,13 @@ Everytime I read or listen to the “Four Quartets” I’m struck by the comple
 </p>
 
 <p>
-So I decided to put my nlp experience to work and come up with a way to represent some aspects of this representation visually
+So I decided to put my nlp experience to work and come up with a way to represent some aspects of this repetition visually
 </p>
 <img src="https://raw.github.com/willkurt/four_quartets_visualized/master/images/burnt_norton_i.png" width=200>
 <p>
-What you see here is a “cosine similarity matrix”, the technical details of which are discussed after the poem.  In straightforward terms what you are seeing is a grid where each square visually represents the similarity between any given 2 lines of the poem.  The lighter the color the more similar the lines.  This also explains the persistent diagonal line in all images, each square here show each lines similarly with itself, which of course is a 100% match.
+What you see here is a “cosine similarity matrix”, the technical details of which are discussed 
+<a href="#tech">after the poem</a>. 
+ In straightforward terms what you are seeing is a grid where each square visually represents the similarity between any given 2 lines of the poem.  The lighter the color the more similar the lines.  This also explains the persistent diagonal line in all images, each square here show each lines similarly with itself (ie line 1 with line 1, line 23 with line 23 etc), which of course is a 100% match.
 </p>
 <p>
 This visualization allows us to explore poetry and lyrical verse in a new light. Rather than scribble notes on paper, never really seeing the big picture, we can now visually understand the structure of repetition in a given work.
@@ -1323,6 +1325,7 @@ We start by considering each line in the poem as a row, and then every single un
 
 <p>
 For “time present and time past”, the columns “time”,”present”,”and”, and “past” would all have a ‘1’ all other columns would be ‘0’.
+The end result would be a much larger (in both directions) version of the matrix below, where each row represents a line of the poem and each columns represents whether or not the line contains a specific word.
 </p>
 <p>
 <img src="http://upload.wikimedia.org/math/7/6/4/764ccd16b6858aebdc0c311d1308133a.png" alt='binary matrix'>
@@ -1351,20 +1354,32 @@ We now have a pretty good numerical representation of the entire text of “Four
 The key thing to remember is that each row, or vector, in our matrix can be seen as a single point in n-dimensional space, where ‘n’ is the number of unique words in our text.  This means we can make use of some basic high school math to compare lines (this is why getting everything into a matrix in the first place is so important).
 </p>
 <p>
-In many cases we might just want to use Euclidean distance to measure between 2 points, this makes sense and is useful in many cases. However language is a strange thing, since we’re using term-frequency in our calculation the sentences “die” and “die, die, die ,die” would actually be quite a bit apart in Euclidean terms, since the magnitude of “die” is very different in each line.
+In many cases we might just want to use Euclidean distance to measure between 2 points, this makes sense and is useful in many cases. 
+
+Below are the formulas for the Euclidean distance between points in 2d space (what you learned in high school) and the more general definition for n-dimensional space
+</p>
+<p>
+<img src="http://upload.wikimedia.org/math/e/9/b/e9bc9802d13e41da8242ae16cdf9dec0.png" alt="cartesian distance">
 </p>
 <p>
 <img src="http://upload.wikimedia.org/math/a/0/5/a056c1b3e4b1c72be81acf62b9e574ca.png" alt="general euclidean distance formula">
 </p>
 <p>
-Another way to view vectors is not as points, but as lines (again in n-dimensional space) from the origin.  Once again this view allows us to pull some tools from our high school math.  Since our old problem was magnitude, we need a way to find out how close 2 lines, starting at the origin are that disregards magnitude.  If you draw it out it’s surprisingly simple: look at the angle between them.  We’re going to do one more small trick which is to look at the cosine of the angle between the two vectors. This is nice not only computationally, but also because if gives us a value from 0 to 1, with 0 being if the angle is 90 degrees and 1 if the angle between them is 0 (meaning they are the same). This gives us what we call “cosine similarity”. 
+However language is a strange thing, since we’re using term-frequency in our calculation the sentences “die” and “die, die, die ,die” would actually be quite a bit apart in Euclidean terms, since the magnitude of “die” is very different in each line.
 </p>
 <p>
-<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Unitcirclecodefs.svg/250px-Unitcirclecodefs.svg.png" alt="cosine">
+Another way to view vectors is not as points, but as lines (again in n-dimensional space) from the origin.  Once again this view allows us to pull some tools from our high school math.  Since our old problem was magnitude, we need a way to find out how close 2 lines, starting at the origin are that disregards magnitude.  If you draw it out it’s surprisingly simple: look at the angle between them. 
+</p>
+<p>
+<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Angle_measure.svg/220px-Angle_measure.svg.png" alt="angle difference">
+</p>
+<p>
+ We’re going to do one more small trick which is to look at the cosine of the angle between the two vectors. This is nice not only computationally, but also because it gives us a value from 0 to 1, with 0 being if the angle is 90 degrees and 1 if the angle between them is 0 (meaning they are the same). This gives us what we call “cosine similarity”. 
 </p>
 <p>
 <img src="http://upload.wikimedia.org/math/f/3/6/f369863aa2814d6e283f859986a1574d.png" alt="cosine similarity">
 </p>
+<p>Above is the formula for calculating the cosine between two vectors</p>
 <p>
 If we then take the cosine similarity between every line and every line we get a new matrix, a cosine similarity matrix. If you add colors to represent that values from 0 to 1 you get exactly the visualization presented here.
 
